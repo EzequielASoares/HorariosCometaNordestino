@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Horários Do Cometa Nordestino</title>
+<style>
+    body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    
+    h1 {
+        text-align: center;
+    }
+
+    #videoContainer {
+        display: none;
+    }
+
+    #videoContainer.show {
+        display: block;
+    }
+
+    video {
+        width: 100vw;
+        height: 100vh;
+    }
+
+    #playButton {
+        font-size: 24px;
+        padding: 10px 20px;
+    }
+</style>
+</head>
+<body>
+    <h1>Horários Do Cometa Nordestino</h1>
+
+    <div id="videoContainer">
+        <video id="videoPlayer" controls loop onended="returnToInitialScreen()">
+            <source src="./Horarios/Horário.mp4" type="video/mp4">
+            Seu navegador não suporta o elemento de vídeo.
+        </video>
+    </div>
+
+    <button id="playButton" onclick="playVideoFullScreen()">Segunda-feira</button>
+
+    <script>
+        function playVideoFullScreen() {
+            var videoContainer = document.getElementById('videoContainer');
+            var video = document.getElementById('videoPlayer');
+            if (videoContainer.requestFullscreen) {
+                videoContainer.requestFullscreen();
+            } else if (videoContainer.mozRequestFullScreen) { /* Firefox */
+                videoContainer.mozRequestFullScreen();
+            } else if (videoContainer.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+                videoContainer.webkitRequestFullscreen();
+            } else if (videoContainer.msRequestFullscreen) { /* IE/Edge */
+                videoContainer.msRequestFullscreen();
+            }
+            videoContainer.classList.add('show');
+            video.play();
+        }
+
+        function returnToInitialScreen() {
+            var videoContainer = document.getElementById('videoContainer');
+            videoContainer.classList.remove('show');
+            var video = document.getElementById('videoPlayer');
+            video.pause();
+            document.exitFullscreen();
+        }
+    </script>
+</body>
+</html>
