@@ -18,11 +18,11 @@
         text-align: center;
     }
 
-    #videoContainer {
+    .videoContainer {
         display: none;
     }
 
-    #videoContainer.show {
+    .videoContainer.show {
         display: block;
     }
 
@@ -31,28 +31,62 @@
         height: 100vh;
     }
 
-    #playButton {
+    .dayButton {
         font-size: 24px;
         padding: 10px 20px;
+        margin: 5px;
     }
 </style>
 </head>
 <body>
     <h1>Horários Do Cometa Nordestino</h1>
 
-    <div id="videoContainer">
-        <video id="videoPlayer" controls loop onended="returnToInitialScreen()">
-            <source src="./Horarios/Horário.mp4" type="video/mp4">
+    <div id="segunda" class="videoContainer">
+        <video controls loop onended="returnToInitialScreen('segunda')">
+            <source src="" type="video/mp4">
+            Seu navegador não suporta o elemento de vídeo.
+        </video>
+    </div>
+    <div id="terca" class="videoContainer">
+        <video controls loop onended="returnToInitialScreen('terca')">
+            <source src="" type="video/mp4">
+            Seu navegador não suporta o elemento de vídeo.
+        </video>
+    </div>
+    <div id="quarta" class="videoContainer">
+        <video controls loop onended="returnToInitialScreen('quarta')">
+            <source src="" type="video/mp4">
+            Seu navegador não suporta o elemento de vídeo.
+        </video>
+    </div>
+    <div id="quinta" class="videoContainer">
+        <video controls loop onended="returnToInitialScreen('quinta')">
+            <source src="" type="video/mp4">
+            Seu navegador não suporta o elemento de vídeo.
+        </video>
+    </div>
+    <div id="sexta" class="videoContainer">
+        <video controls loop onended="returnToInitialScreen('sexta')">
+            <source src="" type="video/mp4">
             Seu navegador não suporta o elemento de vídeo.
         </video>
     </div>
 
-    <button id="playButton" onclick="playVideoFullScreen()">Segunda-feira</button>
+    <button class="dayButton" onclick="playVideoFullScreen('segunda', './Horarios/HorárioSeg.mp4')">Segunda-feira</button>
+    <button class="dayButton" onclick="playVideoFullScreen('terca', './Horarios/HorárioTer.mp4')">Terça-feira</button>
+    <button class="dayButton" onclick="playVideoFullScreen('quarta', './Horarios/HorárioQua.mp4')">Quarta-feira</button>
+    <button class="dayButton" onclick="playVideoFullScreen('quinta', './Horarios/HorárioQui.mp4')">Quinta-feira</button>
+    <button class="dayButton" onclick="playVideoFullScreen('sexta', './Horarios/HorárioSex.mp4')">Sexta-feira</button>
 
     <script>
-        function playVideoFullScreen() {
-            var videoContainer = document.getElementById('videoContainer');
-            var video = document.getElementById('videoPlayer');
+        function playVideoFullScreen(day, videoSrc) {
+            var videoContainer = document.getElementById(day);
+            var video = videoContainer.querySelector('video');
+
+            // Define a origem do vídeo
+            video.querySelector('source').src = videoSrc;
+
+            // Solicita tela cheia
             if (videoContainer.requestFullscreen) {
                 videoContainer.requestFullscreen();
             } else if (videoContainer.mozRequestFullScreen) { /* Firefox */
@@ -62,15 +96,24 @@
             } else if (videoContainer.msRequestFullscreen) { /* IE/Edge */
                 videoContainer.msRequestFullscreen();
             }
+
+            // Exibe o vídeo e reproduz
             videoContainer.classList.add('show');
+            video.load();
             video.play();
         }
 
-        function returnToInitialScreen() {
-            var videoContainer = document.getElementById('videoContainer');
+        function returnToInitialScreen(day) {
+            var videoContainer = document.getElementById(day);
+            var video = videoContainer.querySelector('video');
+
+            // Esconde o vídeo
             videoContainer.classList.remove('show');
-            var video = document.getElementById('videoPlayer');
+
+            // Pausa o vídeo
             video.pause();
+
+            // Sai do modo tela cheia
             document.exitFullscreen();
         }
     </script>
