@@ -20,8 +20,10 @@
     }
     
     h1 {
+        padding-top: 100px;
         text-align: center;
         color: aliceblue;
+       
     }
 
     .videoContainer {
@@ -37,26 +39,51 @@
         height: 100vh;
     }
 
+    .buttonContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap; /* Permite que os botões quebrem para a linha abaixo se necessário */
+        margin-top: 20px; /* Espaçamento acima dos botões da semana */
+    }
+
     button {
         background-color: #d89500; /* Cor de fundo inicial */
-  color: white; /* Cor do texto */
-  border: none; /* Sem borda */
-  border-radius: 25px; /* Borda arredondada */
-  padding: 15px 30px; /* Espaçamento interno */
-  font-size: 16px; /* Tamanho do texto */
-  cursor: pointer; /* Cursor de mãozinha ao passar o mouse */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra leve */
-  transition: background-color 0.3s, box-shadow 0.3s;
+        color: white; /* Cor do texto */
+        border: none; /* Sem borda */
+        border-radius: 25px; /* Borda arredondada */
+        padding: 15px 30px; /* Espaçamento interno */
+        font-size: 16px; /* Tamanho do texto */
+        cursor: pointer; /* Cursor de mãozinha ao passar o mouse */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra leve */
+        transition: background-color 0.3s, box-shadow 0.3s;
+        margin: 5px; /* Espaçamento entre os botões */
+        padding-top: 20px;
+        padding-bottom: 20px;
     }
 
     button:hover{
         background-color: #d89400e2; /* Cor de fundo ao passar o mouse */
         box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); 
     }
+
+    #playButton {
+        margin-bottom: 20px; /* Espaçamento abaixo do botão automático */
+    }
 </style>
 </head>
 <body>
     <h1>Horários Cometa Nordestino</h1>
+
+    <button id="playButton">Reproduzir Horários Automático</button>
+
+    <div class="buttonContainer">
+        <button class="dayButton" onclick="playVideoFullScreen('segunda', './Horarios/HorárioSeg.mp4')">Segunda-feira</button>
+        <button class="dayButton" onclick="playVideoFullScreen('terca', './Horarios/HorárioTer.mp4')">Terça-feira</button>
+        <button class="dayButton" onclick="playVideoFullScreen('quarta', './Horarios/HorárioQua.mp4')">Quarta-feira</button>
+        <button class="dayButton" onclick="playVideoFullScreen('quinta', './Horarios/HorárioQui.mp4')">Quinta-feira</button>
+        <button class="dayButton" onclick="playVideoFullScreen('sexta', './Horarios/HorárioSex.mp4')">Sexta-feira</button>
+    </div>
 
     <div id="segunda" class="videoContainer">
         <video controls loop onended="returnToInitialScreen('segunda')">
@@ -89,8 +116,6 @@
         </video>
     </div>
 
-    <button id="playButton">Reproduzir Horários</button>
-
     <script>
         function playVideoFullScreen(day, videoSrc) {
             var videoContainer = document.getElementById(day);
@@ -116,21 +141,15 @@
             video.play();
         }
 
-        function returnToInitialScreen(day) {
-            var videoContainer = document.getElementById(day);
-            var video = videoContainer.querySelector('video');
-
-            // Esconde o vídeo
-            videoContainer.classList.remove('show');
-
-            // Pausa o vídeo
-            video.pause();
-
-            // Sai do modo tela cheia
-            if (document.fullscreenElement) {
-                document.exitFullscreen();
-            }
-        }
+        function returnToInitialScreen() {
+    var videoContainers = document.querySelectorAll('.videoContainer.show');
+    
+    videoContainers.forEach(function(videoContainer) {
+        var video = videoContainer.querySelector('video');
+        videoContainer.classList.remove('show');
+        video.pause();
+    });
+}
 
         function autoPlayVideoForToday() {
             var days = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
@@ -177,6 +196,13 @@
                 returnToInitialScreen(todayVideo.day);
             }
         });
+
+        document.addEventListener('keydown', function(event) {
+    if (event.key === "Escape") {
+        event.preventDefault();
+        returnToInitialScreen();
+    }
+});
     </script>
 </body>
 </html>
