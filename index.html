@@ -12,10 +12,16 @@
         align-items: center;
         height: 100vh;
         margin: 0;
+        background-image: url('./Horarios/logocometa.png');
+        background-size: 20%;
+        background-position: top;
+        background-repeat: no-repeat;
+        background-color: #004775;
     }
     
     h1 {
         text-align: center;
+        color: aliceblue;
     }
 
     .videoContainer {
@@ -31,10 +37,21 @@
         height: 100vh;
     }
 
-    .dayButton {
-        font-size: 24px;
-        padding: 10px 20px;
-        margin: 5px;
+    button {
+        background-color: #d89500; /* Cor de fundo inicial */
+  color: white; /* Cor do texto */
+  border: none; /* Sem borda */
+  border-radius: 25px; /* Borda arredondada */
+  padding: 15px 30px; /* Espaçamento interno */
+  font-size: 16px; /* Tamanho do texto */
+  cursor: pointer; /* Cursor de mãozinha ao passar o mouse */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra leve */
+  transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    button:hover{
+        background-color: #d89400e2; /* Cor de fundo ao passar o mouse */
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); 
     }
 </style>
 </head>
@@ -72,11 +89,7 @@
         </video>
     </div>
 
-    <button class="dayButton" onclick="playVideoFullScreen('segunda', './Horarios/HorárioSeg.mp4')">Segunda-feira</button>
-    <button class="dayButton" onclick="playVideoFullScreen('terca', './Horarios/HorárioTer.mp4')">Terça-feira</button>
-    <button class="dayButton" onclick="playVideoFullScreen('quarta', './Horarios/HorárioQua.mp4')">Quarta-feira</button>
-    <button class="dayButton" onclick="playVideoFullScreen('quinta', './Horarios/HorárioQui.mp4')">Quinta-feira</button>
-    <button class="dayButton" onclick="playVideoFullScreen('sexta', './Horarios/HorárioSex.mp4')">Sexta-feira</button>
+    <button id="playButton">Reproduzir Horários</button>
 
     <script>
         function playVideoFullScreen(day, videoSrc) {
@@ -114,8 +127,56 @@
             video.pause();
 
             // Sai do modo tela cheia
-            document.exitFullscreen();
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            }
         }
+
+        function autoPlayVideoForToday() {
+            var days = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+            var videoSrcs = {
+                'segunda': './Horarios/HorárioSeg.mp4',
+                'terca': './Horarios/HorárioTer.mp4',
+                'quarta': './Horarios/HorárioQua.mp4',
+                'quinta': './Horarios/HorárioQui.mp4',
+                'sexta': './Horarios/HorárioSex.mp4'
+            };
+            var today = new Date().getDay();
+            var day = days[today === 0 || today === 6 ? 1 : today];
+
+            return { day, videoSrc: videoSrcs[day] };
+        }
+
+        function refreshAtMidnight() {
+            var now = new Date();
+            var night = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate() + 1,
+                0, 0, 0
+            );
+            var msTillMidnight = night.getTime() - now.getTime();
+            setTimeout(function() {
+                location.reload(true);
+            }, msTillMidnight);
+        }
+
+        window.onload = function() {
+            var todayVideo = autoPlayVideoForToday();
+
+            document.getElementById('playButton').onclick = function() {
+                playVideoFullScreen(todayVideo.day, todayVideo.videoSrc);
+            };
+
+            refreshAtMidnight();
+        };
+
+        document.addEventListener('fullscreenchange', function() {
+            if (!document.fullscreenElement) {
+                var todayVideo = autoPlayVideoForToday();
+                returnToInitialScreen(todayVideo.day);
+            }
+        });
     </script>
 </body>
 </html>
